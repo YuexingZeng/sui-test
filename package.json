@@ -1,0 +1,18 @@
+{
+  "name": "sui-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mysten/sui.js": "0.0.0-experimental-20230326165705",
+    "child_process": "^1.0.2",
+    "circomlibjs": "^0.1.7",
+    "fromb64": "^1.0.0",
+    "snarkjs": "^0.6.10"
+  }
+}

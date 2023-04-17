@@ -70,8 +70,8 @@ async function initialize() {
 }
 
 // from output of 'sui client publish xxx'
-const gamePkgObjectId = "0x791e03db87931a7fadc816d421ffa887468316e38ee92d69ffccd5e7cdce0502";
-const stateObjectId = "0x7314f53d2e1a9bc4e6225184e8e451ffb2e876aae73608bcf7d02b0ca39c4611";
+const gamePkgObjectId = "0xb53932d362344dde75b3f35dfb09b8c15202ca1f56527a8e98303c318fad7250";
+const stateObjectId = "0x507a0621ad1ef54e6c4953f9e378be370aa2f5b165e093f852acb4818f0f7a82";
 
 async function startNewGame(signer: RawSigner) {
   console.log(`startNewGame start`)
@@ -94,25 +94,15 @@ async function startNewGame(signer: RawSigner) {
     proof
   )
   console.log(`verify proof result=${JSON.stringify(result, null, 2)}`)
-  /*
-  // prove on-chain hash is of valid board configuration
-  const proofArgs = buildProofArgs(proof)
-  let tx = await (await game.connect(alice).newGame(
-      F.toObject(boardHashes.alice),
-      ...proofArgs //pi_a, pi_b_0, pi_b_1, pi_c
-  )).wait()
- */
-
 
   let tx = new TransactionBlock();
-  let hashStr = "631314AF7FFCAAFF1C958C26C74A6ED9CE5D13738452974AA874E5AD12686D21";
-  let proofStr = "cd95c1bc3ae661db04eeeda09d9cc6bcc336aa00bb339316836d76041e3dd589dce63a064e65eb6727ffacf0c2aa36e0edda38e5f05faf8c0483bd340e69c6122a36b4320d966692d2df5f16fcf1e192b2a7777fc8df63ee3a245708c1c50d2561bf61ca1665db04ca5c26e23e7b9ee1f2bcf03e581372a2ead3ab37b332db09"
+  let hashStr = reverseHex(input.hash.toString(16));
+  let proofStr = await parseProof(proof);
   let hashArr = hexToArr(hashStr);
   let proofArr = hexToArr(proofStr);
   tx.moveCall({
     target: `${gamePkgObjectId}::battleship::new_game`,
     arguments: [tx.object(stateObjectId),
-    // tx.pure("cd95c1bc3ae661db04eeeda09d9cc6bcc336aa00bb339316836d76041e3dd5   89  dce63a064e65eb6727ffacf0c2aa36e0edda38e5f05faf8c0483bd340e69c612  2a36b4320d966692d2df5f16fcf1e192b2a7777fc8df63ee3a245708c1c50d25  61bf61ca1665db04ca5c26e23e7b9ee1f2bcf03e581372a2ead3ab37b332db  09"),
     tx.pure(hashArr),
     tx.pure(proofArr)
     ],
@@ -124,6 +114,14 @@ async function startNewGame(signer: RawSigner) {
   });
   console.log(`new_game resultOfExec=${JSON.stringify(resultOfExec.effects?.status.status, null, 2)}`)
   console.log(`startNewGame end`)
+}
+
+function reverseHex(str: string): string {
+  let res = "";
+  for (let i = str.length - 2; i >= 0; i = i - 2) {
+    res = res + (str[i] + str[i + 1]);
+  }
+  return res
 }
 
 async function joinGame(signer: RawSigner) {
@@ -149,14 +147,13 @@ async function joinGame(signer: RawSigner) {
   console.log(`verify proof result=${JSON.stringify(result, null, 2)}`)
 
   let tx = new TransactionBlock();
-  let hashStr = "f1f479892c28b2a657da16ee1c96f42fff7ae2113b6c0e64db69c998b5c1f014";
-  let proofStr = "102f0dfc122608a0182c5aaba931df04331698cb4a970e167044ab2555e1d0032c0b534e563fc920522d504737ad9e9c98f1a33795a539f127f5d576adb3251bfcce0577cc7d2cf7fe27de8ead282e432f87d3b543037870057d315b059013aa54c07c5197b8351ea0087399b9b7a536e112f30a12037314f0b28acf15e06595"
+  let hashStr = reverseHex(input.hash.toString(16));
+  let proofStr = await parseProof(proof);
   let hashArr = hexToArr(hashStr);
   let proofArr = hexToArr(proofStr);
   tx.moveCall({
     target: `${gamePkgObjectId}::battleship::join_game`,
     arguments: [tx.object(stateObjectId),
-    // tx.pure("cd95c1bc3ae661db04eeeda09d9cc6bcc336aa00bb339316836d76041e3dd5   89  dce63a064e65eb6727ffacf0c2aa36e0edda38e5f05faf8c0483bd340e69c612  2a36b4320d966692d2df5f16fcf1e192b2a7777fc8df63ee3a245708c1c50d25  61bf61ca1665db04ca5c26e23e7b9ee1f2bcf03e581372a2ead3ab37b332db  09"),
     tx.pure(0x1),
     tx.pure(hashArr),
     tx.pure(proofArr)
@@ -177,7 +174,6 @@ async function firstTurn(signer: RawSigner) {
   tx.moveCall({
     target: `${gamePkgObjectId}::battleship::first_turn`,
     arguments: [tx.object(stateObjectId),
-    // tx.pure("cd95c1bc3ae661db04eeeda09d9cc6bcc336aa00bb339316836d76041e3dd5   89  dce63a064e65eb6727ffacf0c2aa36e0edda38e5f05faf8c0483bd340e69c612  2a36b4320d966692d2df5f16fcf1e192b2a7777fc8df63ee3a245708c1c50d25  61bf61ca1665db04ca5c26e23e7b9ee1f2bcf03e581372a2ead3ab37b332db  09"),
     tx.pure(0x1),
     tx.pure(0x1),
     tx.pure(0x0)
@@ -192,7 +188,7 @@ async function firstTurn(signer: RawSigner) {
   console.log(`firstTurn end`)
 }
 
-async function simulateTurn(aliceNonce: any,signer_alice: RawSigner,signer_bob: RawSigner) {
+async function simulateTurn(aliceNonce: any, signer_alice: RawSigner, signer_bob: RawSigner) {
   console.log("Bob reporting result of Alice shot %d", aliceNonce);
   let { boardHashes, F } = await initialize();
   let input = {
@@ -220,8 +216,8 @@ async function simulateTurn(aliceNonce: any,signer_alice: RawSigner,signer_bob: 
     // tx.pure("cd95c1bc3ae661db04eeeda09d9cc6bcc336aa00bb339316836d76041e3dd5   89  dce63a064e65eb6727ffacf0c2aa36e0edda38e5f05faf8c0483bd340e69c612  2a36b4320d966692d2df5f16fcf1e192b2a7777fc8df63ee3a245708c1c50d25  61bf61ca1665db04ca5c26e23e7b9ee1f2bcf03e581372a2ead3ab37b332db  09"),
     tx_bob_turn.pure(0x1),
     tx_bob_turn.pure(0x1),
-    tx_bob_turn.pure(shots.bob[aliceNonce-1][0]),
-    tx_bob_turn.pure(shots.bob[aliceNonce-1][1]),
+    tx_bob_turn.pure(shots.bob[aliceNonce - 1][0]),
+    tx_bob_turn.pure(shots.bob[aliceNonce - 1][1]),
     tx_bob_turn.pure(proofArr_bob_turn)
     ],
   });
@@ -232,7 +228,7 @@ async function simulateTurn(aliceNonce: any,signer_alice: RawSigner,signer_bob: 
   });
   console.log(`turn resultOfExec=${JSON.stringify(resultOfExec_bob_turn.effects?.status.status, null, 2)}`)
   /// ALICE PROVES BOB PREV REGISTERED SHOT MISSED ///
-  console.log("Alice reporting result of Bob shot %d",aliceNonce-1);
+  console.log("Alice reporting result of Bob shot %d", aliceNonce - 1);
   // bob's shot hit/miss integrity proof public / private inputs
   input = {
     ships: boards.alice,
@@ -373,8 +369,8 @@ async function parseProof(proof: any): Promise<any> {
 
 async function main() {
   // from ~/.sui/sui_config/sui.keystore
-  let activeAddrKeystore_alice = "ALzSpn6m3IMjuVsEYWAG+bcCFvpoiQY/+HfMxKeWbhbn"
-  let activeAddrKeystore_bob = "AFUjzxUrFqq4o7GAnnivTrX1y+V4qyZ8eF3TwuaPYQfo"
+  let activeAddrKeystore_alice = "AKYoqEC332wDlqB7RFD+g3QwEiAmu7fwS4QoyO6dYmdV"
+  let activeAddrKeystore_bob = "ANnCqG6JWf1YVBH9Ohh29ugk8SA7XZQzgLZNxCoOsvls"
 
   const PRIVATE_KEY_SIZE = 32;
   const raw_alice = fromB64(activeAddrKeystore_alice);
@@ -397,7 +393,7 @@ async function main() {
   await firstTurn(signer_alice)
   for (let i = 1; i <= 16; i++) {
     console.log("Prove hit/ miss for 32 turns")
-    await simulateTurn(i,signer_alice,signer_bob);
+    await simulateTurn(i, signer_alice, signer_bob);
   }
   console.log("Alice wins on sinking all of Bob\'s ships")
   await turn(signer_bob);

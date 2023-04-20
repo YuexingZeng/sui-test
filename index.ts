@@ -70,8 +70,8 @@ async function initialize() {
 }
 
 // from output of 'sui client publish xxx'
-const gamePkgObjectId = "0xb53932d362344dde75b3f35dfb09b8c15202ca1f56527a8e98303c318fad7250";
-const stateObjectId = "0x507a0621ad1ef54e6c4953f9e378be370aa2f5b165e093f852acb4818f0f7a82";
+const gamePkgObjectId = "0x31cc6c9a07c7a3dce72acc32d7724e86c875097b10e5472cdc50a5e8eb7a8c9a";
+const stateObjectId = "0xe7d43037855dcfd171a44c1229a76a52205c15aaee011af274aa9d0a1e294a9b";
 
 async function startNewGame(signer: RawSigner) {
   console.log(`startNewGame start`)
@@ -107,7 +107,7 @@ async function startNewGame(signer: RawSigner) {
     tx.pure(proofArr)
     ],
   });
-  tx.setGasBudget(300000);
+  tx.setGasBudget(80000000);
   let resultOfExec = await signer.signAndExecuteTransactionBlock({
     transactionBlock:
       tx, options: { showObjectChanges: true, showEffects: true, showEvents: true, showInput: true }
@@ -159,7 +159,7 @@ async function joinGame(signer: RawSigner) {
     tx.pure(proofArr)
     ],
   });
-  tx.setGasBudget(300000);
+  tx.setGasBudget(80000000);
   let resultOfExec = await signer.signAndExecuteTransactionBlock({
     transactionBlock:
       tx, options: { showObjectChanges: true, showEffects: true, showEvents: true, showInput: true }
@@ -179,7 +179,7 @@ async function firstTurn(signer: RawSigner) {
     tx.pure(0x0)
     ],
   });
-  tx.setGasBudget(300000);
+  tx.setGasBudget(80000000);
   let resultOfExec = await signer.signAndExecuteTransactionBlock({
     transactionBlock:
       tx, options: { showObjectChanges: true, showEffects: true, showEvents: true, showInput: true }
@@ -221,7 +221,7 @@ async function simulateTurn(aliceNonce: any, signer_alice: RawSigner, signer_bob
     tx_bob_turn.pure(proofArr_bob_turn)
     ],
   });
-  tx_bob_turn.setGasBudget(300000);
+  tx_bob_turn.setGasBudget(80000000);
   let resultOfExec_bob_turn = await signer_bob.signAndExecuteTransactionBlock({
     transactionBlock:
       tx_bob_turn, options: { showObjectChanges: true, showEffects: true, showEvents: true, showInput: true }
@@ -259,7 +259,7 @@ async function simulateTurn(aliceNonce: any, signer_alice: RawSigner, signer_bob
     tx_alice_turn.pure(proofArr_alice_turn)
     ],
   });
-  tx_alice_turn.setGasBudget(300000);
+  tx_alice_turn.setGasBudget(80000000);
   let resultOfExec_alice_turn = await signer_alice.signAndExecuteTransactionBlock({
     transactionBlock:
       tx_alice_turn, options: { showObjectChanges: true, showEffects: true, showEvents: true, showInput: true }
@@ -304,7 +304,7 @@ async function turn(signer: RawSigner) {
     tx.pure(proofArr)
     ],
   });
-  tx.setGasBudget(300000);
+  tx.setGasBudget(80000000);
   let resultOfExec = await signer.signAndExecuteTransactionBlock({
     transactionBlock:
       tx, options: { showObjectChanges: true, showEffects: true, showEvents: true, showInput: true }
@@ -369,8 +369,8 @@ async function parseProof(proof: any): Promise<any> {
 
 async function main() {
   // from ~/.sui/sui_config/sui.keystore
-  let activeAddrKeystore_alice = "AKYoqEC332wDlqB7RFD+g3QwEiAmu7fwS4QoyO6dYmdV"
-  let activeAddrKeystore_bob = "ANnCqG6JWf1YVBH9Ohh29ugk8SA7XZQzgLZNxCoOsvls"
+  let activeAddrKeystore_alice = "AAp6U7gFHRdU5k6I42QT60J0y/6lRK0TDKHdw2aVHwYB"
+  let activeAddrKeystore_bob = "AMjx3yxeTstoGoDCUefcHnlP4vsniix0R1fj4NDCTtRH"
 
   const PRIVATE_KEY_SIZE = 32;
   const raw_alice = fromB64(activeAddrKeystore_alice);

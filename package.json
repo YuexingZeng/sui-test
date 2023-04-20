@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@mysten/sui.js": "0.0.0-experimental-20230404162921",
+    "@mysten/sui.js": "0.0.0-experimental-20230418011747",
     "child_process": "^1.0.2",
     "circomlibjs": "^0.1.7",
     "ffjavascript": "^0.2.57",

@@ -121,6 +121,9 @@ function reverseHex(str: string): string {
   for (let i = str.length - 2; i >= 0; i = i - 2) {
     res = res + (str[i] + str[i + 1]);
   }
+  if (str.length % 2 == 1) {
+    res = res + "0" + str[0];
+  }
   return res
 }
 

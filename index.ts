@@ -70,8 +70,8 @@ async function initialize() {
 }
 
 // from output of 'sui client publish xxx'
-const gamePkgObjectId = "0x31cc6c9a07c7a3dce72acc32d7724e86c875097b10e5472cdc50a5e8eb7a8c9a";
-const stateObjectId = "0xe7d43037855dcfd171a44c1229a76a52205c15aaee011af274aa9d0a1e294a9b";
+const gamePkgObjectId = "0x772caa1f719f90493b4c43d9570bbd274b5a7fc8e46d87aacf98c36448a98b38";
+const stateObjectId = "0xef7fefe491da558a47c11cb0d098b4da748ad145a23cc255e6c75d8ee5578d10";
 
 async function startNewGame(signer: RawSigner) {
   console.log(`startNewGame start`)
@@ -118,11 +118,11 @@ async function startNewGame(signer: RawSigner) {
 
 function reverseHex(str: string): string {
   let res = "";
+  while(str.length<64) {
+    str = "0"+str;
+  }
   for (let i = str.length - 2; i >= 0; i = i - 2) {
     res = res + (str[i] + str[i + 1]);
-  }
-  if (str.length % 2 == 1) {
-    res = res + "0" + str[0];
   }
   return res
 }
